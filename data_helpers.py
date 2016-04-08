@@ -10,7 +10,7 @@ def clean_str(string):
     Tokenization/string cleaning for all datasets except for SST.
     Original taken from https://github.com/yoonkim/CNN_sentence/blob/master/process_data.py
     """
-    string = re.sub(r"[^A-Za-z0-9(),!?\'\`]", " ", string)
+    #string = re.sub(r"[^A-Za-z0-9(),!?\'\`]", " ", string)
     string = re.sub(r"\'s", " \'s", string)
     string = re.sub(r"\'ve", " \'ve", string)
     string = re.sub(r"n\'t", " n\'t", string)
@@ -58,7 +58,7 @@ def load_data_and_labels():
     x_text = all[1:, 2]
     print "origin msg: ", x_text[0]
 
-    #x_text = [clean_str(sent) for sent in x_text]
+    x_text = [clean_str(sent) for sent in x_text]
     x_text = [s.split(" ") for s in x_text]
 
     likes = all[1:,10].astype(np.int).astype(np.int, casting="safe")
