@@ -2,7 +2,8 @@ import numpy as np
 import re
 import itertools
 from collections import Counter
-
+import gzip
+import csv
 
 def clean_str(string):
     """
@@ -25,7 +26,7 @@ def clean_str(string):
     return string.strip().lower()
 
 
-def load_data_and_labels():
+def _load_data_and_labels():
     """
     Loads MR polarity data from files, splits the data into words and generates labels.
     Returns split sentences and labels.
@@ -43,6 +44,34 @@ def load_data_and_labels():
     positive_labels = [[0, 1] for _ in positive_examples]
     negative_labels = [[1, 0] for _ in negative_examples]
     y = np.concatenate([positive_labels, negative_labels], 0)
+    return [x_text, y]
+
+def load_data_and_labels():
+    """
+    Loads MR polarity data from files, splits the data into words and generates labels.
+    Returns split sentences and labels.
+    """
+    with gzip.open("data/2015_group_post.csv.gz", "rb") as f:
+        d = csv.reader(f)
+        all = np.array(list(d))
+
+    x_text = all[1:, 2]
+    print "origin msg: ", x_text[0]
+
+    #x_text = [clean_str(sent) for sent in x_text]
+    x_text = [s.split(" ") for s in x_text]
+
+    likes = all[1:,10].astype(np.int).astype(np.int, casting="safe")
+    labels = [0 if l<4 else 1 for l in likes]
+
+    print "Labels - 1: ", np.sum(labels), " 0: ", len(labels)-np.sum(labels)
+    print "msg: ", x_text[0]
+
+    y = [([1,0] if l==0 else [0,1]) for l in labels]
+    # Generate labels
+    #positive_labels = [[0, 1] for _ in positive_examples]
+    #negative_labels = [[1, 0] for _ in negative_examples]
+    #y = np.concatenate([positive_labels, negative_labels], 0)
     return [x_text, y]
 
 
