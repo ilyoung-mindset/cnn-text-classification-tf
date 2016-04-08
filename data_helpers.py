@@ -64,7 +64,7 @@ def load_data_and_labels():
     x_text = [s.split(" ") for s in x_text]
 
     likes = all[1:,10].astype(np.int).astype(np.int, casting="safe")
-    labels = [0 if l<4 else 1 for l in likes]
+    labels = [0 if l<3 else 1 for l in likes]
 
     print "Labels - 1: ", np.sum(labels), " 0: ", len(labels)-np.sum(labels)
     print "msg: ", x_text[0]
